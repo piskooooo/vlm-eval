@@ -25,4 +25,5 @@ version, so the generator refreshes the hashes together with the files.
 
 This is a tiny workflow smoke dataset, not a representative benchmark. It cannot
 establish photographic understanding, OCR ability, general accuracy or ranking.
-No live-model results are included. See the main README for the evaluation command.
+Live smoke records for llama.cpp and OpenAI are linked from the main README.
+These three simple images do not constitute a representative benchmark.

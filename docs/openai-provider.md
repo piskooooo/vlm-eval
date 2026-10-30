@@ -1,8 +1,9 @@
 # OpenAI Responses provider — 2026-10-30
 
 Published in commit `3a8ad31` after owner-authorized review, commit and push.
-Status: mocked validation only. No live OpenAI evaluation or paid request has
-been made. Existing local-model results do not establish OpenAI compatibility.
+Status: one authorized live three-image run passed on 2026-10-30 using
+`gpt-5.4-mini-2026-03-17`; see the [live record](openai-live-evaluation-2026-10-30.md).
+Error paths remain mock-tested; this result does not qualify other models or datasets.
 
 ## Contract and sources
 
@@ -72,7 +73,7 @@ unknown fields skip. Raw is null when no safe inference envelope was obtained.
 Only nonnegative integer token counts are recorded. Output limits include
 reasoning; missing usage is not estimated. There is no dollar spending cap.
 
-## Validation and deferred live command
+## Validation and optional repeat command
 
 New mocked tests demonstrated failures before implementation. The full 28-test
 suite passes, including all 14 original tests. Coverage includes the three-image
@@ -92,9 +93,10 @@ A 512-token cap may yield incomplete output, particularly with model-default
 reasoning. Record that result rather than treating a larger cap or retry as
 implicitly approved. Up to three attempts and 1,536 output tokens are requested;
 input/image token charges and service behavior mean this is not a guaranteed
-monetary limit. No live accuracy, account access or timing claim is made.
+monetary limit. The live record covers only the tested account, snapshot and dataset.
 
-Out of scope: paid calls, automatic retries, model discovery/downloads, pricing
+Out of scope for the adapter: automatic retries, model discovery/downloads, pricing
 estimates, Azure/custom endpoints, streaming, tools, SDK adoption, existing app
 or service changes. Commit/push were separately authorized after local
-implementation and completed; paid calls remain unauthorized.
+implementation and completed. One subsequent paid smoke run was authorized and
+completed; additional paid evaluations require new authorization in this workflow.

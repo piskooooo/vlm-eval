@@ -19,7 +19,7 @@ No original application photographs or third-party assets are included.
 - Ollama and llama.cpp: external user-provided servers, not redistributed. Review
   the selected server distribution and model license separately.
 - OpenAI: external hosted API, not redistributed; no SDK dependency or model
-  assets are bundled. Its adapter remains mock-tested only.
+  assets are bundled. Its adapter has a [three-image live smoke result](openai-live-evaluation-2026-10-30.md).
 - Model weights, projectors and tokenizer assets: none included or downloaded.
 - Images/datasets: three original procedural PNGs in `examples/shapes/`, licensed
   MIT with provenance and content hashes. No external source assets. The template

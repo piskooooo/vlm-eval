@@ -4,10 +4,10 @@ A small evaluator for structured vision-model answers: load local images and
 human-labeled truth, call a vision model once per item, and save field-level
 scores together with the evidence needed to interpret them.
 
-**MIT licensed.** One three-image live evaluation passed using
-Gemma 4 on llama.cpp; see the [run record](docs/live-evaluation-2026-10-30.md).
-Ollama and OpenAI remain mock-tested only. The smoke result is not
-a general accuracy claim.
+**MIT licensed.** Three-image live smoke evaluations passed using
+[Gemma 4 on llama.cpp](docs/live-evaluation-2026-10-30.md) and
+[OpenAI GPT-5.4 mini](docs/openai-live-evaluation-2026-10-30.md).
+Ollama remains mock-tested only. These are not general accuracy claims.
 
 ## Scope and supported interface
 
@@ -23,7 +23,7 @@ a general accuracy claim.
 - The pinned Gemma 4 / llama.cpp combination in the run record has passed the
   example smoke test. Other combinations remain unverified. Use a vision
   model already installed on your own server for the local adapters. The hosted
-  OpenAI adapter is documented below and has no live verification. Model aliases can change;
+  OpenAI adapter has the bounded live evidence linked above. Model aliases can change;
   retain model digest, quantization and server version separately when comparing
   runs. Server defaults such as context size and thinking are not pinned here.
 
@@ -67,7 +67,7 @@ The [basic-shapes dataset](examples/shapes/README.md) contains three original PN
 and independently specified color/shape labels. Images, labels and generator are
 MIT licensed with an explicit image redistribution grant, provenance and hashes.
 No private or third-party images are included. This is a smoke dataset, not a
-representative benchmark. The recorded llama.cpp smoke result was 3/3 on each
+representative benchmark. The recorded llama.cpp and OpenAI smoke results were each 3/3 on each
 field.
 
 From the repository root, validate it without any model calls:
@@ -230,13 +230,13 @@ or reconfigure the server. Obtain permission before sharing an application's
 model service. [Protocol reference](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
 
 
-## Hosted OpenAI vision (mock-validated, not live-verified)
+## Hosted OpenAI vision (three-image live smoke verified)
 
 Use `--provider openai` to opt into sending data to OpenAI. The adapter uses the
 Responses API with inline images and strict JSON Schema output, not the llama.cpp
 protocol. [GPT-5.4 mini](https://developers.openai.com/api/docs/models/gpt-5.4-mini)
 is a currently documented image-input/Responses model. The example pins
-`gpt-5.4-mini-2026-03-17`; this project has not run it live. `--model` is configurable,
+`gpt-5.4-mini-2026-03-17`; this snapshot passed the [three-image smoke test](docs/openai-live-evaluation-2026-10-30.md). `--model` is configurable,
 but account access and image/structured-output support must be verified for any
 model you choose. No untested model is claimed to work.
 

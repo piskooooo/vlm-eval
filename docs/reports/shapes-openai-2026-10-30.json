@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "tool_version": "0.1.0",
+  "run_id": "5c82253d-f7a2-4960-9e9a-b98fb488d162",
+  "started_at": "2026-10-30T22:45:54.172556+00:00",
+  "dataset": {
+    "id": "basic-shapes",
+    "version": "1",
+    "manifest_sha256": "c03ece3074c6b1499c210000365491e738b1f684f85cef8ef32f069993e24450"
+  },
+  "provider": {
+    "interface": "openai-responses",
+    "model": "gpt-5.4-mini-2026-03-17",
+    "settings": {
+      "max_output_tokens": 512,
+      "image_detail": "auto",
+      "sampling": "model_default",
+      "reasoning": "model_default"
+    },
+    "timeout_seconds": 60,
+    "retries": 0,
+    "store": false,
+    "stream": false,
+    "format": "strict-json-schema-string-or-null-v1",
+    "endpoint_recorded": false
+  },
+  "prompt": "Inspect the single colored shape on a white background. Return only a JSON object with color and shape fields. Use a basic color name and a basic shape name as strings, or null if a field cannot be determined.",
+  "scoring": "normalized-exact-truth-states-v1",
+  "rows": [
+    {
+      "id": "001",
+      "truth": {
+        "color": {
+          "state": "value",
+          "value": "red"
+        },
+        "shape": {
+          "state": "value",
+          "value": "circle"
+        }
+      },
+      "status": "ok",
+      "error_code": null,
+      "images": [
+        {
+          "path": "001.png",
+          "sha256": "c161584c4b7db1b44465bc86efb9a7958ea0731a8bd53cae287108610e641e0c"
+        }
+      ],
+      "raw": {
+        "model": "gpt-5.4-mini-2026-03-17",
+        "status": "completed",
+        "has_error": false,
+        "output": [
+          {
+            "type": "message",
+            "role": "assistant",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "{\"color\":\"red\",\"shape\":\"circle\"}"
+              }
+            ]
+          }
+        ],
+        "usage": {
+          "input_tokens": 161,
+          "output_tokens": 18,
+          "total_tokens": 179,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        }
+      },
+      "prediction": {
+        "color": "red",
+        "shape": "circle"
+      },
+      "scores": {
+        "color": {
+          "pass": true,
+          "truth": "red",
+          "pred": "red",
+          "outcome": "exact",
+          "truth_state": "value"
+        },
+        "shape": {
+          "pass": true,
+          "truth": "circle",
+          "pred": "circle",
+          "outcome": "exact",
+          "truth_state": "value"
+        }
+      },
+      "wall_seconds": 1.7989355830000022,
+      "provider_metrics": {
+        "input_tokens": 161,
+        "output_tokens": 18,
+        "total_tokens": 179,
+        "cached_tokens": 0,
+        "reasoning_tokens": 0
+      }
+    },
+    {
+      "id": "002",
+      "truth": {
+        "color": {
+          "state": "value",
+          "value": "green"
+        },
+        "shape": {
+          "state": "value",
+          "value": "square"
+        }
+      },
+      "status": "ok",
+      "error_code": null,
+      "images": [
+        {
+          "path": "002.png",
+          "sha256": "6d9521b7ff9c206ec6d758b968f4c995420cb99139c29d67fce672e0e9e67f3c"
+        }
+      ],
+      "raw": {
+        "model": "gpt-5.4-mini-2026-03-17",
+        "status": "completed",
+        "has_error": false,
+        "output": [
+          {
+            "type": "message",
+            "role": "assistant",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "{\"color\":\"green\",\"shape\":\"square\"}"
+              }
+            ]
+          }
+        ],
+        "usage": {
+          "input_tokens": 161,
+          "output_tokens": 18,
+          "total_tokens": 179,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        }
+      },
+      "prediction": {
+        "color": "green",
+        "shape": "square"
+      },
+      "scores": {
+        "color": {
+          "pass": true,
+          "truth": "green",
+          "pred": "green",
+          "outcome": "exact",
+          "truth_state": "value"
+        },
+        "shape": {
+          "pass": true,
+          "truth": "square",
+          "pred": "square",
+          "outcome": "exact",
+          "truth_state": "value"
+        }
+      },
+      "wall_seconds": 0.7437867089997781,
+      "provider_metrics": {
+        "input_tokens": 161,
+        "output_tokens": 18,
+        "total_tokens": 179,
+        "cached_tokens": 0,
+        "reasoning_tokens": 0
+      }
+    },
+    {
+      "id": "003",
+      "truth": {
+        "color": {
+          "state": "value",
+          "value": "blue"
+        },
+        "shape": {
+          "state": "value",
+          "value": "triangle"
+        }
+      },
+      "status": "ok",
+      "error_code": null,
+      "images": [
+        {
+          "path": "003.png",
+          "sha256": "ce692670e8176bb480e1f706ac502ceb624be49cf9ae8a2ce2766488c77280ca"
+        }
+      ],
+      "raw": {
+        "model": "gpt-5.4-mini-2026-03-17",
+        "status": "completed",
+        "has_error": false,
+        "output": [
+          {
+            "type": "message",
+            "role": "assistant",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "{\"color\":\"blue\",\"shape\":\"triangle\"}"
+              }
+            ]
+          }
+        ],
+        "usage": {
+          "input_tokens": 161,
+          "output_tokens": 18,
+          "total_tokens": 179,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        }
+      },
+      "prediction": {
+        "color": "blue",
+        "shape": "triangle"
+      },
+      "scores": {
+        "color": {
+          "pass": true,
+          "truth": "blue",
+          "pred": "blue",
+          "outcome": "exact",
+          "truth_state": "value"
+        },
+        "shape": {
+          "pass": true,
+          "truth": "triangle",
+          "pred": "triangle",
+          "outcome": "exact",
+          "truth_state": "value"
+        }
+      },
+      "wall_seconds": 0.8911854999996649,
+      "provider_metrics": {
+        "input_tokens": 161,
+        "output_tokens": 18,
+        "total_tokens": 179,
+        "cached_tokens": 0,
+        "reasoning_tokens": 0
+      }
+    }
+  ],
+  "summary": {
+    "color": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "rate": 1.0
+    },
+    "shape": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "rate": 1.0
+    }
+  },
+  "max_requests": 3,
+  "finished_at": "2026-10-30T22:45:57.606503+00:00"
+}

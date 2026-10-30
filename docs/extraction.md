@@ -44,6 +44,7 @@ The owner then authorized public GitHub publication. Initial commit `7b8e529`
 published the MIT-licensed tool and example dataset without the source
 application's history. A separately authorized OpenAI Responses adapter was
 implemented, mock-tested and published as `3a8ad31`. It adds no runtime dependency
-and preserves the local providers. OpenAI and Ollama remain mock-tested only;
-Gemma 4 on llama.cpp has the limited three-image live evidence linked above.
+and preserves the local providers. Ollama remains mock-tested only. Gemma 4 on llama.cpp has the limited live evidence
+linked above; a later authorized [OpenAI three-image run](openai-live-evaluation-2026-10-30.md)
+also passed. Neither smoke result is a general benchmark.
 See the [release record](release-checklist.md) for current publication status.

@@ -2,8 +2,9 @@
 
 Current status: the initial release and OpenAI provider update are published.
 The latest implementation suite passed 28 tests, including a clean Python 3.11
-wheel installation. OpenAI and Ollama remain mock-tested only; the three-image
-Gemma 4 / llama.cpp run is the sole live evaluation. No paid calls were made.
+wheel installation. Both Gemma 4 / llama.cpp and OpenAI GPT-5.4 mini have
+three-image live smoke evidence. Ollama remains mock-tested only. The OpenAI run
+used three authorized paid requests; see the [live record](openai-live-evaluation-2026-10-30.md).
 See the [release record](release-checklist.md) for commit identities.
 
 ## Initial extraction evidence (historical)
@@ -89,3 +90,16 @@ Git uses the public GitHub username and GitHub noreply commit address. Local raw
 runs and private service details remain ignored and were not published.
 The OpenAI update passed 28 tests before push; this is mocked evidence, not live
 OpenAI verification. No listing application or service changes were made.
+
+## Authorized OpenAI live smoke — 2026-10-30
+
+At tested commit `e7420f44eb3afd8ebc614d58fe58cc6c5fb08709`, the owner launched the
+reviewed one-shot helper from the credential-bearing SSH shell. Preflight passed
+28 project tests, five mocked launcher checks, dataset/hash validation and account
+model availability. Three requests completed successfully: color 3/3, shape 3/3,
+483 input and 54 output tokens, 3.434 seconds summed client time. No retries,
+additional evaluations, application changes or service changes occurred.
+See the [live record and sanitized report](openai-live-evaluation-2026-10-30.md).
+The earlier mock-only statements above describe the implementation/publication
+checkpoints, not the current OpenAI evidence. Live failure cases and Ollama remain
+unverified; this smoke run is not a general accuracy benchmark.
