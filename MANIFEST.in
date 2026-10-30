@@ -1,0 +1,4 @@
+include .env.example
+include LICENSE
+recursive-include examples *.json *.png *.py *.md LICENSE
+recursive-include docs *.md

@@ -1,0 +1,12 @@
+{
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 vlm-eval contributors",
+  "created": "2026-10-30",
+  "generator": "generate.py",
+  "source": "Original procedural geometry; no external assets, fonts, photos or model outputs.",
+  "sha256": {
+    "001.png": "c161584c4b7db1b44465bc86efb9a7958ea0731a8bd53cae287108610e641e0c",
+    "002.png": "6d9521b7ff9c206ec6d758b968f4c995420cb99139c29d67fce672e0e9e67f3c",
+    "003.png": "ce692670e8176bb480e1f706ac502ceb624be49cf9ae8a2ce2766488c77280ca"
+  }
+}

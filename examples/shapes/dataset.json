@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "dataset_id": "basic-shapes",
+  "version": "1",
+  "prompt": "Inspect the single colored shape on a white background. Return only a JSON object with color and shape fields. Use a basic color name and a basic shape name as strings, or null if a field cannot be determined.",
+  "items": [
+    {
+      "id": "001",
+      "images": [
+        "001.png"
+      ],
+      "truth": {
+        "color": {
+          "state": "value",
+          "value": "red"
+        },
+        "shape": {
+          "state": "value",
+          "value": "circle"
+        }
+      }
+    },
+    {
+      "id": "002",
+      "images": [
+        "002.png"
+      ],
+      "truth": {
+        "color": {
+          "state": "value",
+          "value": "green"
+        },
+        "shape": {
+          "state": "value",
+          "value": "square"
+        }
+      }
+    },
+    {
+      "id": "003",
+      "images": [
+        "003.png"
+      ],
+      "truth": {
+        "color": {
+          "state": "value",
+          "value": "blue"
+        },
+        "shape": {
+          "state": "value",
+          "value": "triangle"
+        }
+      }
+    }
+  ]
+}

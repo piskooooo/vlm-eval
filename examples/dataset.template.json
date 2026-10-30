@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "dataset_id": "my-objects",
+  "version": "1",
+  "prompt": "Inspect the image. Return only a JSON object with a color field: the main object's basic color as a string, or null if it cannot be determined.",
+  "items": [
+    {
+      "id": "object-001",
+      "images": ["object.png"],
+      "truth": {"color": {"state": "value", "value": "red"}}
+    }
+  ]
+}

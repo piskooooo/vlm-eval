@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vlm-eval"
+version = "0.1.0"
+description = "Small local-first evaluator for structured vision-model answers"
+requires-python = ">=3.11"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = []
+
+[project.scripts]
+vlm-eval = "vlm_eval.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
