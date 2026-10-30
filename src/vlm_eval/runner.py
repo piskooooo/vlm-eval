@@ -7,9 +7,22 @@ from uuid import uuid4
 from .dataset import parse_json
 from .scoring import TruthField, TruthState, score_exact, score_truth_field
 from . import __version__
+from .openai_provider import OpenAIConfigurationError, OpenAIRequestError, OpenAIResponseError, output_schema, usage_metrics
 
 
-def run(dataset, provider):
+def validate_request_limit(dataset, provider, max_requests):
+    if max_requests is not None and (type(max_requests) is not int or max_requests <= 0 or len(dataset['manifest']['items']) > max_requests):
+        raise ValueError('dataset exceeds --max-requests or limit is not a positive integer')
+    if provider.metadata.get('interface') == 'openai-responses':
+        if max_requests is None:
+            raise OpenAIConfigurationError('OpenAI requires an explicit --max-requests limit')
+        for item in dataset['manifest']['items']:
+            output_schema(tuple(item['truth']))
+
+
+def run(dataset, provider, *, max_requests=None):
+    validate_request_limit(dataset, provider, max_requests)
+    is_openai = provider.metadata.get('interface') == 'openai-responses'
     manifest = dataset['manifest']
     report = {
         'schema_version': 1, 'tool_version': __version__, 'run_id': str(uuid4()),
@@ -19,27 +32,38 @@ def run(dataset, provider):
         'provider': provider.metadata, 'prompt': manifest['prompt'],
         'scoring': 'normalized-exact-truth-states-v1', 'rows': [], 'summary': {},
     }
+    if max_requests is not None:
+        report['max_requests'] = max_requests
     for item in manifest['items']:
         started = time.perf_counter()
         raw, prediction, status = None, {}, 'ok'
+        error_code = None
         try:
-            raw = provider.generate(manifest['prompt'], dataset['images'][item['id']])
+            kwargs = {'fields': tuple(item['truth'])} if is_openai else {}
+            raw = provider.generate(manifest['prompt'], dataset['images'][item['id']], **kwargs)
+        except OpenAIRequestError as exc:
+            status, error_code = 'request_error', exc.code
         except (OSError, ValueError, RuntimeError, HTTPException):
             status = 'request_error'
         if status == 'ok':
             try:
-                if provider.metadata.get('interface') == 'llama-cpp-chat':
+                if is_openai:
+                    prediction = provider.parse_response(raw, tuple(item['truth']))
+                elif provider.metadata.get('interface') == 'llama-cpp-chat':
                     choices = raw['choices']
                     if not isinstance(choices, list) or len(choices) != 1 or choices[0]['finish_reason'] != 'stop':
                         raise ValueError('expected one completed choice')
                     content = choices[0]['message']['content']
                 else:
                     content = raw['message']['content']
-                prediction = parse_json(content)
+                if not is_openai:
+                    prediction = parse_json(content)
                 if not isinstance(prediction, dict) or any(v is not None and not isinstance(v, str) for v in prediction.values()):
                     raise ValueError('expected string or null fields')
                 if raw.get('done') is False or raw.get('done_reason') == 'length':
                     raise ValueError('incomplete response')
+            except OpenAIResponseError as exc:
+                prediction, status, error_code = {}, 'invalid_response', exc.code
             except (ValueError, KeyError, TypeError):
                 prediction, status = {}, 'invalid_response'
         scores = {}
@@ -60,8 +84,11 @@ def run(dataset, provider):
                 for key in ('prompt_tokens', 'completion_tokens', 'total_tokens'):
                     if type(raw['usage'].get(key)) is int and raw['usage'][key] >= 0:
                         usage[key] = raw['usage'][key]
+        if is_openai and isinstance(raw, dict):
+            usage = usage_metrics(raw)
         report['rows'].append({
             'id': item['id'], 'truth': item['truth'], 'status': status,
+            **({'error_code': error_code} if is_openai else {}),
             'images': [{k: v for k, v in image.items() if k != 'bytes'} for image in dataset['images'][item['id']]],
             'raw': raw, 'prediction': prediction, 'scores': scores,
             'wall_seconds': time.perf_counter() - started, 'provider_metrics': usage,

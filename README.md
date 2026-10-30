@@ -6,14 +6,15 @@ scores together with the evidence needed to interpret them.
 
 **MIT licensed.** One three-image live evaluation passed using
 Gemma 4 on llama.cpp; see the [run record](docs/live-evaluation-2026-10-30.md).
-Ollama remains tested against a local HTTP fixture only. The smoke result is not
+Ollama and OpenAI remain mock-tested only. The smoke result is not
 a general accuracy claim.
 
 ## Scope and supported interface
 
 - Python 3.11 or newer; currently validated on Python 3.11, macOS arm64.
-- Two interfaces: Ollama `POST /api/chat` (default), and llama.cpp
-  `POST /v1/chat/completions` via `--provider llama-cpp`; non-streaming JSON answers.
+- Three interfaces: Ollama `POST /api/chat` (default), llama.cpp
+  `POST /v1/chat/completions` via `--provider llama-cpp`, and hosted OpenAI
+  `POST /v1/responses` via `--provider openai`; non-streaming JSON answers.
 - PNG/JPEG inputs, sent unchanged as base64. Signature checks are not full image
   decoding. No resizing, cropping, EXIF stripping, HEIC/MPO conversion or OCR stage.
 - Arbitrary named string/null output fields and explicit truth states.
@@ -21,7 +22,8 @@ a general accuracy claim.
   listing integrations, model installation, or service management.
 - The pinned Gemma 4 / llama.cpp combination in the run record has passed the
   example smoke test. Other combinations remain unverified. Use a vision
-  model already installed on your own server. Model aliases can change;
+  model already installed on your own server for the local adapters. The hosted
+  OpenAI adapter is documented below and has no live verification. Model aliases can change;
   retain model digest, quantization and server version separately when comparing
   runs. Server defaults such as context size and thinking are not pinned here.
 
@@ -46,7 +48,7 @@ Tests use Python's standard library:
 ## Configure
 
 Ollama defaults to `http://127.0.0.1:11434`; llama.cpp defaults to
-`http://127.0.0.1:8080`. Environment variables:
+`http://127.0.0.1:8080`. Local-provider environment variables:
 
 - `VLM_EVAL_BASE_URL`: bare provider origin, without a path, query, or credentials.
 - `VLM_EVAL_API_KEY`: optional bearer credential. HTTPS is required, except that the
@@ -56,7 +58,8 @@ Ollama defaults to `http://127.0.0.1:11434`; llama.cpp defaults to
 **does not load `.env` files**. Non-loopback endpoints require HTTPS. Redirects
 and environment proxies are disabled. No endpoint or key is written to reports.
 Remote endpoints receive the full images and prompt; only configure one you intend
-to use. Private image metadata is not removed. The tool does not send truth labels.
+to use. Private image metadata is not removed. The tool does not send truth labels. OpenAI uses only `OPENAI_API_KEY` and a
+fixed HTTPS destination; the local-provider variables above do not affect it.
 
 ## Included example: basic shapes
 
@@ -144,14 +147,15 @@ Truth examples:
 `not_applicable` require an explicit JSON null prediction; a missing key fails.
 Ask the model for every field you intend to score. Booleans/numbers/arrays in model
 answers are currently unsupported and invalidate the response. Extra string/null
-fields are retained but unscored. Dataset and response JSON with duplicate keys is invalid.
+fields are retained but unscored for local providers. OpenAI uses a strict schema
+and rejects missing or additional keys. Dataset and response JSON with duplicate keys is invalid.
 
 To add data, copy the template into an ignored `data/` directory, add owned images,
 label them independently, and increment the dataset version when content changes.
 To compare model configurations, rerun the same manifest with another installed
-model name or CLI settings. An API other than Ollama or llama.cpp requires a new adapter in
-`providers.py` and transport tests; changing the URL does not add hosted OpenAI/Gemini
-support.
+model name or CLI settings. An API other than Ollama, llama.cpp or OpenAI Responses requires a new adapter
+and transport tests. Select OpenAI explicitly with `--provider openai`; changing
+a local-provider URL does not select the hosted adapter.
 
 ## Scoring and results
 
@@ -184,7 +188,12 @@ Image hashes bind the exact bytes sent. Raw responses include the provider-retur
 model identifier when present. llama.cpp prompt/completion/total token counts and Ollama token counts and nanosecond durations are
 copied only when supplied as nonnegative integers; they are provider-reported, not
 independently measured. Client wall time includes request and scoring overhead.
-No cost is inferred. Failed transport responses have null raw output; server error
+OpenAI usage includes reported input/output/total tokens and cached/reasoning
+tokens when supplied; invalid usage types are omitted. No cost is inferred.
+OpenAI `raw` is an allowlisted inference record: output/refusal text, response ID,
+returned model, status and usage. It excludes error bodies, input echoes,
+annotations and unrelated API metadata. Other providers retain their native raw
+responses. Failed transport responses have null raw output; server error
 bodies and exception details are not retained. Review raw outputs for sensitive
 content before sharing reports. Reports are created with owner-only permissions;
 `data/`, `runs/`, `.env`, and local environments are ignored by Git.
@@ -192,7 +201,7 @@ content before sharing reports. Reports are created with owner-only permissions;
 ## Repository
 
 ```text
-src/vlm_eval/   dataset.py, scoring.py, runner.py, providers.py, __main__.py
+src/vlm_eval/   dataset.py, scoring.py, runner.py, providers.py, openai_provider.py, __main__.py
 examples/      shapes/ (3 MIT PNGs, labels, provenance, generator); dataset.template.json
 tests/         dataset, scoring, and mocked HTTP/CLI checks
 docs/          extraction, validation, licensing, public-release checklist
@@ -219,3 +228,64 @@ It retains the native response, requires exactly one choice with finish reason
 `stop`, and records provider-reported usage. It does not install, restart, unload,
 or reconfigure the server. Obtain permission before sharing an application's
 model service. [Protocol reference](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
+
+
+## Hosted OpenAI vision (mock-validated, not live-verified)
+
+Use `--provider openai` to opt into sending data to OpenAI. The adapter uses the
+Responses API with inline images and strict JSON Schema output, not the llama.cpp
+protocol. [GPT-5.4 mini](https://developers.openai.com/api/docs/models/gpt-5.4-mini)
+is a currently documented image-input/Responses model. The example pins
+`gpt-5.4-mini-2026-03-17`; this project has not run it live. `--model` is configurable,
+but account access and image/structured-output support must be verified for any
+model you choose. No untested model is claimed to work.
+
+Set `OPENAI_API_KEY` in your shell using your secret manager or an interactive
+hidden-input prompt; never place a real key in a command saved to history. The
+CLI does not load `.env`. It reads no other credential for OpenAI. Requests go
+only to `https://api.openai.com/v1/responses`, with normal TLS verification;
+endpoint overrides, proxies and redirects are disabled. No Azure/custom gateway
+support is included. The fixed destination is unaffected by `VLM_EVAL_BASE_URL`,
+`VLM_EVAL_API_KEY` or `OPENAI_BASE_URL`.
+
+After installing the current checkout and exporting your key, this is the exact
+optional three-image live smoke command (do not run until you authorize charges):
+
+```sh
+.venv/bin/vlm-eval run examples/shapes/dataset.json --provider openai --model gpt-5.4-mini-2026-03-17 --max-requests 3 --max-tokens 512 --timeout 60 --out runs/shapes-openai-001.json
+```
+
+- `--max-requests` is required for OpenAI. A dataset larger than this limit is
+  rejected before any requests; it is never silently truncated. The example has
+  three items, hence at most three HTTP attempts. There are zero automatic retries.
+- `--max-tokens` maps to `max_output_tokens` (minimum 16, default 512), including
+  reasoning and visible output. `--timeout` sets the network-operation timeout
+  (default 120 seconds), not a strict end-to-end run deadline. A timed-out request
+  might still execute and be charged by the service.
+- `--seed` and `--temperature` are explicitly unsupported in this hosted adapter,
+  even if a selected model happens to accept temperature. Omit both. Sampling
+  and reasoning use model defaults, recorded as such. Local providers retain
+  their previous temperature/seed defaults of 0. Image detail is fixed to `auto`.
+- Requests contain the original images (including any embedded metadata), the
+  manifest prompt, model/settings, and the requested output field names and
+  string-or-null types. Ground-truth values/states, item IDs, filenames and other
+  dataset metadata are not sent. Do not embed private truth in your prompt or
+  field names. No file uploads, tools or conversation history are used.
+- Responses are requested with `store: false`; this does not promise zero provider
+  retention. Review [OpenAI data controls](https://developers.openai.com/api/docs/guides/your-data)
+  before sending sensitive material. Existing PNG/JPEG validation still applies;
+  the hosted adapter additionally caps each serialized request at 32 MiB and each
+  response at 4 MiB. Up to 100 output fields, each named with at most 128 characters.
+
+**API usage can incur charges. Request and output-token limits are not a guaranteed
+dollar spending cap.** Image/input tokens also cost money, model prices vary, and
+reasoning may consume the output allowance. Incomplete responses are recorded as
+failures, not silently retried. This tool does not estimate cost or manage billing.
+
+Authentication/rate-limit/transport failures use `request_error`; refusals,
+incomplete responses and malformed structured output use `invalid_response`.
+A fixed `error_code` gives a safe reason without retaining sensitive error bodies.
+Scoreable fields fail on either status, while unknown truth remains skipped.
+The report preserves raw output/refusal text and measured client duration; no
+credentials or authorization headers are recorded. See [provider implementation
+and validation notes](docs/openai-provider.md) for the contract and limitations.

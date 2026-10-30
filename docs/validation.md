@@ -57,3 +57,12 @@ The real three-request run then passed both fields 3/3 with no retries, paid cal
 service changes or publication. See `live-evaluation-2026-10-30.md` for exact
 identities, settings, results and bounded service-preservation evidence. Earlier
 "no model calls" statements describe the preceding preparation only.
+
+## Hosted OpenAI follow-up — 2026-10-30
+
+Added a separate Responses API adapter using current official documentation.
+The 28-test source suite passes, including all 14 prior local-provider checks.
+New cases cover structured image requests, credential isolation, explicit limits,
+refusals/incompleteness, sanitized HTTP failures and the mocked three-image CLI
+workflow. OpenAI test sockets are blocked; no real credentials or paid requests
+were used. See `openai-provider.md` for the exact optional live command and limits.
