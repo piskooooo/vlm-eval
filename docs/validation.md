@@ -1,6 +1,14 @@
 # Local validation — 2026-10-30
 
-Scope: standalone candidate, Python 3.11.16 on macOS arm64. No application
+Current status: the initial release and OpenAI provider update are published.
+The latest implementation suite passed 28 tests, including a clean Python 3.11
+wheel installation. OpenAI and Ollama remain mock-tested only; the three-image
+Gemma 4 / llama.cpp run is the sole live evaluation. No paid calls were made.
+See the [release record](release-checklist.md) for commit identities.
+
+## Initial extraction evidence (historical)
+
+Scope at extraction: standalone candidate, Python 3.11.16 on macOS arm64. No application
 configuration, original source files, model services or private photos changed.
 
 - Initial behavioral tests failed on unimplemented dataset/scoring/runner functions;
@@ -17,33 +25,36 @@ configuration, original source files, model services or private photos changed.
 - The HTTP fixture uses synthetic bytes with an image signature, not a real
   decoded image. It verifies base64 transport and workflow only. No real image
   decode or model-accuracy result is claimed.
-- No paid or live model calls were made. The README supplies the live command.
+- No paid or live model calls were made during initial extraction. The later
+  authorized local-model run is recorded below.
 
-## Privacy review scope
+## Initial privacy review scope (historical)
 
 Gitleaks directory scans found zero matches in the standalone candidate and the
 seven inspected original evaluation/backend modules. Publication candidate files
 and built distributions were also inspected for private application identifiers,
 local home paths, private network addresses and credential patterns. No original
 private photos, model assets, environment files, runtime logs or historical
-results were copied. There is no new Git commit history or remote to scan.
+results were copied. At that initial checkpoint there was no Git commit history
+or remote to scan. Later pre-publication scans covered the new commit history.
 
 These are bounded checks, not proof that the entire original repository/history
 is secret-free. No exposed credential was discovered in the inspected source.
 No credential was modified or rotated. Raw future reports can contain private
 model output and must be reviewed separately before sharing.
 
-The source application's pre-existing backlog edit is preserved. The standalone
-repository intentionally has no initial commit pending final review. An independent Codex review was used; no Hermes release-gate verdict,
-public release, live model qualification, or owner acceptance is claimed.
+The source application's pre-existing backlog edit was preserved. At this initial
+checkpoint, the standalone repository was uncommitted pending review. Independent
+Codex review was used; it was not a Hermes release-gate verdict. Subsequent
+publication and the bounded live evaluation are recorded separately.
 
 ## MIT and example dataset follow-up — 2026-10-30
 
 The owner authorized MIT and an example image dataset, with publication and paid
-model calls still excluded. Added three original procedural PNGs, their generator,
+model calls excluded at that stage. Added three original procedural PNGs, their generator,
 explicit MIT asset terms, independently specified labels, and SHA-256 provenance.
 Two new checks failed before the assets existed, then passed after generation.
-The complete suite now has 11 passing tests. New checks validate PNG chunks/CRCs,
+The suite at that stage had 11 passing tests. New checks validate PNG chunks/CRCs,
 dimensions, decompressed pixels, provenance hashes and the three-item mocked
 scoring workflow. All three images were visually inspected. Fixture scores are
 plumbing evidence only, not real model results. No model calls were made.
@@ -66,3 +77,15 @@ New cases cover structured image requests, credential isolation, explicit limits
 refusals/incompleteness, sanitized HTTP failures and the mocked three-image CLI
 workflow. OpenAI test sockets are blocked; no real credentials or paid requests
 were used. See `openai-provider.md` for the exact optional live command and limits.
+
+
+## Publication verification — 2026-10-30
+
+The owner authorized both releases. Initial commit `7b8e529` and OpenAI update
+`3a8ad31` were pushed to the public repository's `main` branch; remote commit
+identities were verified. Exact-tree independent reviews passed, and Gitleaks
+scans of publication files, expanded packages and new Git history found no matches.
+Git uses the public GitHub username and GitHub noreply commit address. Local raw
+runs and private service details remain ignored and were not published.
+The OpenAI update passed 28 tests before push; this is mocked evidence, not live
+OpenAI verification. No listing application or service changes were made.

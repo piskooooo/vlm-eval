@@ -24,16 +24,26 @@ new integration code. The native JSON/base64 transport follows the same protocol
 used by the original Ollama backend but removes listing prompts, parsing,
 retries, image conversion, cache directories, and service unloading.
 
-Out of scope: application changes, production services, eBay integration,
+Initially out of scope: application changes, production services, eBay integration,
 size/fiber/condition scoring, crop pipelines, statistical comparisons, hosted
-provider adapters, model downloads, benchmark claims and publication. This is a focused extraction of the reusable scoring core with the
+provider adapters, model downloads, benchmark claims and publication. Later
+authorized additions are recorded below. This is a focused extraction of the reusable scoring core with the
 minimum independent plumbing; it is not a wholesale port of the evaluation suite.
 
 Follow-up on 2026-10-30: the owner authorized MIT adoption and an original
-procedural example dataset. Both are now included; publication and live-model
-qualification remain outside this local follow-up.
+procedural example dataset. Both were included in that local follow-up; publication and live-model
+qualification were not yet authorized at that point.
 
 A subsequent owner-authorized follow-up added a generic llama.cpp adapter and
 completed one three-image live smoke evaluation using an already resident model.
 Only vlm-eval source and local results changed; no original app or service changes
 were made. The live run record supersedes the earlier qualification-pending status.
+
+
+The owner then authorized public GitHub publication. Initial commit `7b8e529`
+published the MIT-licensed tool and example dataset without the source
+application's history. A separately authorized OpenAI Responses adapter was
+implemented, mock-tested and published as `3a8ad31`. It adds no runtime dependency
+and preserves the local providers. OpenAI and Ollama remain mock-tested only;
+Gemma 4 on llama.cpp has the limited three-image live evidence linked above.
+See the [release record](release-checklist.md) for current publication status.

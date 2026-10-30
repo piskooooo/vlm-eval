@@ -1,5 +1,6 @@
-# OpenAI Responses provider — local implementation, 2026-10-30
+# OpenAI Responses provider — 2026-10-30
 
+Published in commit `3a8ad31` after owner-authorized review, commit and push.
 Status: mocked validation only. No live OpenAI evaluation or paid request has
 been made. Existing local-model results do not establish OpenAI compatibility.
 
@@ -95,4 +96,5 @@ monetary limit. No live accuracy, account access or timing claim is made.
 
 Out of scope: paid calls, automatic retries, model discovery/downloads, pricing
 estimates, Azure/custom endpoints, streaming, tools, SDK adoption, existing app
-or service changes, commit/push and publication for this implementation task.
+or service changes. Commit/push were separately authorized after local
+implementation and completed; paid calls remain unauthorized.
